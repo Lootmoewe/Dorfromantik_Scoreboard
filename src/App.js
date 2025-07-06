@@ -226,7 +226,7 @@ function App() {
   // Page 1: Task grid
   if (page === 1)
     return (
-      <div style={{ padding: 24, fontFamily: "sans-serif", maxWidth: 500, margin: "auto" }}>
+      <div style={{ padding: 24, maxWidth: 500, margin: "auto" }}>
         <h1>Dorfromantik – Aufgaben Zähler</h1>
         <h2>Aufträge</h2>
         <table
@@ -276,7 +276,7 @@ function App() {
 
   // Page 2: Extras
   if (page === 2) return (
-    <div style={{padding:24, fontFamily:"sans-serif", maxWidth:740, margin:"auto"}}>
+    <div style={{padding:24, maxWidth:740, margin:"auto"}}>
       <h1>Dorfromantik – Aufgaben Zähler</h1>
       <h2>Fahnen, Längste & weitere Extras</h2>
       <form onSubmit={e => {e.preventDefault(); handleSubmitExtras();}} autoComplete="off">
@@ -346,7 +346,7 @@ function App() {
 
   // Page 3: Results
   if (page === 3 && results) return (
-    <div style={{padding:24, fontFamily:"sans-serif", maxWidth:740, margin:"auto"}}>
+    <div style={{padding:24, maxWidth:740, margin:"auto"}}>
       <h1>Dorfromantik – Aufgaben Zähler</h1>
       <h2>Ergebnisse</h2>
       <table style={{width:"100%", borderCollapse:"collapse", marginBottom:16}}>
