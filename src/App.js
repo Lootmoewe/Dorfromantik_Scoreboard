@@ -62,6 +62,12 @@ import Fluss_done_4 from './assets/Fluss_done_4.png';
 import Fluss_done_5 from './assets/Fluss_done_5.png';
 import Fluss_done_6 from './assets/Fluss_done_6.png';
 
+//Fahnen & Längste
+import Wald_Fahne from './assets/Wald_Fahne.png';
+import Feld_Fahne from './assets/Feld_Fahne.png';
+import Dorf_Fahne from './assets/Dorf_Fahne.png';
+import Schiene_max from './assets/Schiene_max.png';
+import Fluss_max from './assets/Fluss_max.png';
 
 const imageMap = {
   Wald: {
@@ -391,51 +397,51 @@ function App() {
 
   // Page 1: Task grid
   if (page === 1)
-    return (
-      <div style={{ padding: 24, maxWidth: 500, margin: "auto"}}>
-        <h1 style={{ textAlign: 'center'}}>Dorfromantik: Scoreboard</h1>
+  return (
+    <div style={{ padding: 24, maxWidth: 580, margin: "auto" }}>
+      <h1 style={{ textAlign: "center", marginBottom: 24 }}>Dorfromantik – Aufgaben Zähler</h1>
+
+      {/* Card container */}
+      <div
+        style={{
+          backgroundColor: "#ecf0d5",
+          padding: 20,
+          borderRadius: 12,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          marginBottom: 24
+        }}
+      >
+        <h2 style={{ marginTop: 0, marginBottom: 16, textalign:"center" }}>Aufträge</h2>
         <table
           style={{
             borderCollapse: "collapse",
-            marginBottom: 24,
-            marginLeft: "autstyle={{ textAlign: 'center' }}o",
+            marginLeft: "auto",
             marginRight: "auto",
             tableLayout: "fixed",
+            width: "100%"
           }}
         >
-          <thead>
-            <tr>
-              {categories.map(cat => (
-                <th
-                  key={cat.key}
-                  style={{
-                    borderBottom: "2px solid #aaa",
-                    color: cat.color,
-                    fontSize: 18,
-                    fontWeight: 700,
-                    textalign: "center",
-                    paddingBottom: 6,
-                    width: cellWidth,
-                    textAlign: "center"
-                  }}
-                >
-                  {cat.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>{taskRows}</tbody>
+          
+          <tbody>
+            {taskRows}
+          </tbody>
         </table>
-        <button onClick={handleSubmitTasks} style={{
-   marginRight:16}}>
+
+        <div style={{ fontSize: 13, color: "#555", marginTop: 12, textAlign: "center" }}>
+          Klicke Aufgaben: 1× für aktiv, 2× für doppelt, 3× für aus.
+        </div>
+      </div>
+
+      <div style={{ textAlign: "center" }}>
+        <button onClick={handleSubmitTasks} style={{ marginRight: 16 }}>
           Weiter
         </button>
-        <button onClick={handleReset} style={{
-  marginRight:16}}>
+        <button onClick={handleReset}>
           Zurücksetzen
         </button>
       </div>
-    );
+    </div>
+  );
 
 
   // Page 2: Extras
@@ -444,63 +450,149 @@ function App() {
       <h1>Dorfromantik – Aufgaben Zähler</h1>
       <h2>Fahnen, Längste & weitere Extras</h2>
       <form onSubmit={e => {e.preventDefault(); handleSubmitExtras();}} autoComplete="off">
-      <div style={{display:"flex", flexWrap:"wrap", gap:24, marginBottom:20}}>
-        {categories.map(cat => (
-          <div key={cat.key} style={{minWidth:125}}>
-            <div style={{fontWeight:"bold", color:cat.color, marginBottom:4}}>{cat.label}</div>
-            {extraFields.filter(f => f.cat===cat.key).map(f =>
-              <div key={f.key} style={{marginBottom:6}}>
-                <label>{f.label}: <input type="number" min={0} step={1}
-                  value={extras[f.key]} onChange={e=>handleExtraChange(e,f.key)} style={{width:50}} /></label>
-              </div>
-            )}
-          </div>
-        ))}
+      {/* Card for Fahnen & Längste */}
+<div
+  style={{
+    backgroundColor: "#ecf0d5",
+    padding: 20,
+    borderRadius: 12,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    marginBottom: 32
+  }}
+>
+  <h2 style={{ marginTop: 0, marginBottom: 16 }}>Fahnen & Längste</h2>
+  <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+    {categories.map(cat => (
+      <div key={cat.key} style={{ minWidth: 160 }}>
+        
+        {extraFields
+  .filter(f => f.cat === cat.key)
+  .map(f => {
+    const iconMap = {
+      wald_fahnen: Wald_Fahne,
+      feld_fahnen: Feld_Fahne,
+      dorf_fahnen: Dorf_Fahne,
+      schiene_laengste: Schiene_max,
+      fluss_laengste: Fluss_max
+    };
+    return (
+      <div key={f.key} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+        <img
+          src={iconMap[f.key]}
+          alt={f.label}
+          style={{ width: 42, height: 42, borderRadius: 8 }}
+        />
+        <input
+          type="number"
+          min={0}
+          step={1}
+          value={extras[f.key]}
+          onChange={e => handleExtraChange(e, f.key)}
+          style={{
+            width: 50,
+            padding: "4px 6px",
+            border: "1px solid #ccc",
+            borderRadius: 6
+          }}
+        />
       </div>
+    );
+  })}
+      </div>
+    ))}
+  </div>
+</div>
 
-      <h3>Freigespielt & weitere Extras</h3>
-      <div style={{display:"flex", flexWrap:"wrap", gap:24, marginBottom:14}}>
-        {freigespieltFields.map(f =>
-          <div key={f.key} style={{minWidth:140, marginBottom:8}}>
-            <label>
-              {f.label}
-              {f.type === "checkbox" ? (
-                <input type="checkbox" checked={!!frei[f.key]}
-                    onChange={e=>handleFreiChange(e,f.key,f)} style={{marginLeft:8}} />
-              ) : f.type === "even" ? (
-                <input
-                  type="number"
-                  min={0}
-                  step={2}
-                  value={frei[f.key]}
-                  onChange={e=>handleFreiChange(e,f.key,f)}
-                  style={{width:42,marginLeft:8}}
-                />
-              ) : f.type === "baustelle" ? (
-                <select value={frei[f.key]} onChange={e=>handleFreiChange(e,f.key,f)} style={{marginLeft:8}}>
-                  {baustelleOptions.map(opt =>
-                    <option key={opt} value={opt}>{opt}</option>
-                  )}
-                </select>
-              ) : (
-                <input
-                  type="number"
-                  min={0}
-                  max={f.max}
-                  step={1}
-                  value={frei[f.key]}
-                  onChange={e=>handleFreiChange(e,f.key,f)}
-                  style={{width:42,marginLeft:8}}
-                />
-              )}
-              {f.max && f.type==="number" ? <span style={{fontSize:12, marginLeft:4, color:"#888"}}>max {f.max}</span> : null}
-              {f.type==="checkbox" && f.points ? <span style={{fontSize:12, marginLeft:6, color:"#888"}}>({f.points} Punkte)</span> : null}
-              {f.type==="even" ? <span style={{fontSize:12, marginLeft:4, color:"#888"}}>nur gerade Werte</span> : null}
-              {f.type==="baustelle" ? <span style={{fontSize:12, marginLeft:4, color:"#888"}}>(0, 7, 14, 21)</span> : null}
-            </label>
-          </div>
+{/* Card for Freigespielt & Extras */}
+<h2 style={{ marginBottom: 16 }}>Freigespielt & weitere Extras</h2>
+<div
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 24,
+    padding: 20,
+    backgroundColor: "#ecf0d5",
+    borderRadius: 12,
+    marginBottom: 32,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+  }}
+>
+  {freigespieltFields.map(f => (
+    <div key={f.key} style={{ minWidth: 180 }}>
+      <label style={{ fontSize: 14, fontWeight: 500 }}>
+        {f.label}
+        {f.type === "checkbox" ? (
+          <input
+            type="checkbox"
+            checked={!!frei[f.key]}
+            onChange={e => handleFreiChange(e, f.key, f)}
+            style={{ marginLeft: 8 }}
+          />
+        ) : f.type === "even" ? (
+          <input
+            type="number"
+            min={0}
+            step={2}
+            value={frei[f.key]}
+            onChange={e => handleFreiChange(e, f.key, f)}
+            style={{
+              width: 50,
+              marginLeft: 8,
+              padding: "4px 6px",
+              border: "1px solid #ccc",
+              borderRadius: 6
+            }}
+          />
+        ) : f.type === "baustelle" ? (
+          <select
+            value={frei[f.key]}
+            onChange={e => handleFreiChange(e, f.key, f)}
+            style={{
+              marginLeft: 8,
+              padding: "4px 6px",
+              border: "1px solid #ccc",
+              borderRadius: 6
+            }}
+          >
+            {baustelleOptions.map(opt => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type="number"
+            min={0}
+            max={f.max}
+            step={1}
+            value={frei[f.key]}
+            onChange={e => handleFreiChange(e, f.key, f)}
+            style={{
+              width: 50,
+              marginLeft: 8,
+              padding: "4px 6px",
+              border: "1px solid #ccc",
+              borderRadius: 6
+            }}
+          />
         )}
-      </div>
+        {f.max && f.type === "number" && (
+          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>max {f.max}</span>
+        )}
+        {f.type === "checkbox" && f.points && (
+          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>({f.points} Punkte)</span>
+        )}
+        {f.type === "even" && (
+          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>nur gerade</span>
+        )}
+        {f.type === "baustelle" && (
+          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>(0, 7, 14, 21)</span>
+        )}
+      </label>
+    </div>
+  ))}
+</div>
       <button type="button" onClick={handleBackExtras} style={{marginRight:16}}>Zurück</button>
       <button type="submit" >Weiter</button>
       <button type="button" onClick={handleReset} style={{marginLeft:16}}>Zurücksetzen</button>
