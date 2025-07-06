@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './App.css';
 
 // Category setup
 const categories = [
@@ -262,13 +263,12 @@ function App() {
         <div style={{ fontSize: 13, color: "#888", marginBottom: 22 }}>
           Klicke Aufgaben: 1x für aktiv, 2x für doppelt, 3x für aus.
         </div>
-        <button onClick={handleSubmitTasks} style={{ padding: "9px 32px", fontSize: 18, marginTop: 8 }}>
+        <button onClick={handleSubmitTasks} style={{
+   marginRight:16}}>
           Weiter
         </button>
-        <button
-          onClick={handleReset}
-          style={{ padding: "8px 24px", fontSize: 16, background: "#eee", marginLeft: 16 }}
-        >
+        <button onClick={handleReset} style={{
+  marginRight:16}}>
           Zurücksetzen
         </button>
       </div>
@@ -337,9 +337,9 @@ function App() {
           </div>
         )}
       </div>
-      <button type="button" onClick={handleBackExtras} style={{padding:"8px 24px", fontSize:16, background:"#eee", marginRight:16}}>Zurück</button>
-      <button type="submit" style={{padding:"9px 32px", fontSize:18, marginTop:8}}>Weiter</button>
-      <button type="button" onClick={handleReset} style={{padding:"8px 24px", fontSize:16, background:"#eee", marginLeft:16}}>Zurücksetzen</button>
+      <button type="button" onClick={handleBackExtras} style={{marginRight:16}}>Zurück</button>
+      <button type="submit" >Weiter</button>
+      <button type="button" onClick={handleReset} style={{marginLeft:16}}>Zurücksetzen</button>
       </form>
     </div>
   );
@@ -381,7 +381,7 @@ function App() {
       <div style={{fontSize:20, fontWeight:700, marginTop:4}}>
         Gesamt: <span style={{color:"#227"}}>{results.total}</span>
       </div>
-      <button onClick={handleReset} style={{padding:"8px 24px", fontSize:16, background:"#eee", marginTop:24}}>Neu</button>
+      <button onClick={handleReset}>Neues Spiel</button>
     </div>
   );
 }
