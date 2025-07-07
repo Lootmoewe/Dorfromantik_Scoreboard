@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import './App.css';
 
+//Logo
+import Logo from './assets/Dorfromantik.png';
+
 // Wald
 import Wald from './assets/Wald.png';
 import Wald_4 from './assets/Wald_active_4.png';
@@ -192,8 +195,8 @@ function TaskButton({ value, state, onClick, catLabel }) {
   }
 
   const style = {
-    width: 64,
-    height: 64,
+    width: 56,
+    height: 56,
     margin: 4,
     position: "relative",
     cursor: "pointer",
@@ -399,19 +402,32 @@ function App() {
   if (page === 1)
   return (
     <div style={{ padding: 24, maxWidth: 580, margin: "auto" }}>
-      <h1 style={{ textAlign: "center", marginBottom: 24 }}>Dorfromantik: Scoreboard</h1>
-
-      {/* Card container */}
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
       <div
         style={{
-          backgroundColor: "#ecf0d5",
+          backgroundColor: "#505a35",
           padding: 20,
           borderRadius: 12,
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
           marginBottom: 24
         }}
       >
-        <h2 style={{ marginTop: 0, marginBottom: 16, textalign:"center" }}>Aufträge</h2>
+  <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
+  </div>
+</div>
+
+      {/* Card container */}
+      <h2 style={{ marginTop: 0, marginBottom: 16, textalign:"center" }}>Aufträge</h2>
+      <div
+        style={{
+          backgroundColor: "#d5dcb6",
+          padding: 20,
+          borderRadius: 12,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          marginBottom: 24
+        }}
+      >
+        
         <table
           style={{
             borderCollapse: "collapse",
@@ -427,15 +443,12 @@ function App() {
           </tbody>
         </table>
 
-        <div style={{ fontSize: 13, color: "#555", marginTop: 12, textAlign: "center" }}>
-          Klicke Aufgaben: 1× für aktiv, 2× für doppelt, 3× für aus.
-        </div>
       </div>
 
       <div style={{ textAlign: "center" }}>
-        <button onClick={handleSubmitTasks} style={{ marginRight: 16 }}>
+        <button onClick={handleSubmitTasks} style={{ marginRight: 0 }}>
           Weiter
-        </button>
+        </button><br/>
         <button onClick={handleReset}>
           Zurücksetzen
         </button>
@@ -447,53 +460,71 @@ function App() {
   // Page 2: Extras
   if (page === 2) return (
     <div style={{padding:24, maxWidth:740, margin:"auto"}}>
-      <h1>Dorfromantik: Scoreboard</h1>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+      <div
+        style={{
+          backgroundColor: "#505a35",
+          padding: 20,
+          borderRadius: 12,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          marginBottom: 24
+        }}
+      >
+  <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
+  </div>
+  </div>
       <h2>Fahnen & Längste</h2>
       <form onSubmit={e => {e.preventDefault(); handleSubmitExtras();}} autoComplete="off">
       {/* Card for Fahnen & Längste */}
       <div
   style={{
-    backgroundColor: "#ecf0d5",
+    backgroundColor: "#d5dcb6",
     padding: 20,
     borderRadius: 12,
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-    marginBottom: 32
+    marginBottom: 24,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
   }}
 >
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      gap: 32
-    }}
-  >
-    {[
+  {/* Fahnen row */}
+  <div style={{ display: "flex", justifyContent: "center", gap: 40, marginBottom: 24 }}>
+    {[ 
       { key: "wald_fahnen", img: Wald_Fahne },
       { key: "feld_fahnen", img: Feld_Fahne },
-      { key: "dorf_fahnen", img: Dorf_Fahne },
-      { key: "schiene_laengste", img: Schiene_max },
-      { key: "fluss_laengste", img: Fluss_max }
+      { key: "dorf_fahnen", img: Dorf_Fahne }
     ].map(({ key, img }) => (
-      <div
-        key={key}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 6
-        }}
-      >
-        <img
-          src={img}
-          alt={key}
-          style={{ width: 48, height: 48 }}
-        />
+      <div key={key} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        <img src={img} alt={key} style={{ width: 48, height: 48 }} />
         <input
           type="number"
           min={0}
           step={1}
           value={extras[key]}
-          onChange={e => handleExtraChange(e, key)}
+          onChange={(e) => handleExtraChange(e, key)}
+          style={{
+            width: 50,
+            padding: "4px 6px",
+            border: "1px solid #ccc",
+            borderRadius: 6
+          }}
+        />
+      </div>
+    ))}
+  </div>
+
+  {/* Längste row */}
+  <div style={{ display: "flex", justifyContent: "center", gap: 40 }}>
+    {[ 
+      { key: "schiene_laengste", img: Schiene_max },
+      { key: "fluss_laengste", img: Fluss_max }
+    ].map(({ key, img }) => (
+      <div key={key} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        <img src={img} alt={key} style={{ width: 48, height: 48 }} />
+        <input
+          type="number"
+          min={0}
+          step={1}
+          value={extras[key]}
+          onChange={(e) => handleExtraChange(e, key)}
           style={{
             width: 50,
             padding: "4px 6px",
@@ -511,11 +542,11 @@ function App() {
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: window.innerWidth <= 600 ? "1fr" : "1fr 1fr",
     columnGap: 32,
     rowGap: 16,
     padding: 20,
-    backgroundColor: "#ecf0d5",
+    backgroundColor: "#d5dcb6",
     borderRadius: 12,
     marginBottom: 32,
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
@@ -523,7 +554,7 @@ function App() {
 >
   {freigespieltFields.map((f) => (
     <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <label style={{ fontSize: 14, fontWeight: 500, flex: 1 }}>
+      <label style={{ fontSize: 20, fontWeight: 500, flex: 1 }}>
         {f.label}
         {/* Custom instructions based on game sheet */}
         {(() => {
@@ -615,21 +646,35 @@ function App() {
     </div>
   ))}
 </div>
+<div style={{ textAlign: "center" }}>
       <button type="button" onClick={handleBackExtras} style={{marginRight:16}}>Zurück</button>
-      <button type="submit" >Weiter</button>
-      <button type="button" onClick={handleReset} style={{marginLeft:16}}>Zurücksetzen</button>
+      <button type="submit" >Weiter</button><br/>
+      <button type="button" onClick={handleReset} style={{marginLeft:0}}>Zurücksetzen</button>
+</div>      
       </form>
     </div>
   );
 
   // Page 3: Results
   if (page === 3 && results) return (
-    <div style={{ padding: 24, maxWidth: 740, margin: "auto" }}>
-  <h1>Dorfromantik: Scoreboard</h1>
-
+    <div style={{ padding: 24, maxWidth: 320, margin: "auto" }}>
+  <div style={{ textAlign: "center", marginBottom: 24 }}>
+  <div
+        style={{
+          backgroundColor: "#505a35",
+          padding: 20,
+          borderRadius: 12,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          marginBottom: 24
+        }}
+      >
+  <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
+  </div>
+  </div>
+  <h2 style={{ marginTop: 0 }}>Ergebnisse</h2>
   <div
     style={{
-      backgroundColor: "#ecf0d5",
+      backgroundColor: "#d5dcb6",
       padding: 24,
       borderRadius: 12,
       boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
@@ -640,61 +685,152 @@ function App() {
       marginRight: "auto"
     }}
   >
-    <h2 style={{ marginTop: 0 }}>Ergebnisse</h2>
-    <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 16 }}>
-      <thead>
-        <tr>
-          <th style={{ textAlign: "left", borderBottom: "1px solid #bbb" }}>Kategorie</th>
-          <th style={{ textAlign: "right", borderBottom: "1px solid #bbb" }}>Aufträge</th>
-          <th style={{ textAlign: "right", borderBottom: "1px solid #bbb" }}>Fahnen/Längste</th>
-          <th style={{ textAlign: "right", borderBottom: "1px solid #bbb" }}>Extra (doppelt)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {categories.map((cat) => (
-          <tr key={cat.key}>
-            <td style={{ textAlign: "left" }}>
-  <img
-    src={
-      {
-        wald: Wald,
-        feld: Feld,
-        dorf: Dorf,
-        schiene: Schiene,
-        fluss: Fluss
-      }[cat.key]
-    }
-    alt={cat.label}
-    style={{ width: 32, height: 32 }}
-  />
-</td>
-<td style={{ textAlign: "right", color: cat.color }}>
-    {results.auftraege[cat.key].normal}
+    
+    <table
+  style={{
+    width: "100%",
+    borderCollapse: "collapse",
+    marginBottom: 16,
+    backgroundColor: "#fff",
+    border: "1px solid #bbb",
+  }}
+>
+  <thead>
+    <tr>
+      <th style={{
+        textAlign: "center",
+        border: "1px solid #a2bb71",
+        backgroundColor: "#f8f8f8",
+        padding: "8px"
+      }}>
+        {/* empty cell for icons */}
+      </th>
+      <th style={{
+        textAlign: "center",
+        border: "1px solid #a2bb71",
+        backgroundColor: "#f8f8f8",
+        padding: "8px"
+      }}>Aufträge</th>
+      <th style={{
+        textAlign: "center",
+        border: "1px solid #a2bb71",
+        backgroundColor: "#f8f8f8",
+        padding: "8px"
+      }}>Fahnen<br/>& max</th>
+      <th style={{
+        textAlign: "center",
+        border: "1px solid #a2bb71",
+        backgroundColor: "#f8f8f8",
+        padding: "8px"
+      }}>doppelt</th>
+    </tr>
+  </thead>
+  <tbody>
+    {categories.map((cat) => (
+      <tr key={cat.key}>
+        <td
+          style={{
+            textAlign: "center",
+            padding: "8px",
+            border: "1px solid #a2bb71"
+          }}
+        >
+          <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100%"
+    }}
+  >
+  
+          <img
+            src={{
+              wald: Wald,
+              feld: Feld,
+              dorf: Dorf,
+              schiene: Schiene,
+              fluss: Fluss
+            }[cat.key]}
+            alt={cat.label}
+            style={{ width: 28, height: 28 }}
+          />
+        </div>
+        </td>
+        <td
+          style={{
+            textAlign: "center",
+            padding: "8px",
+            border: "1px solid #a2bb71",
+            color: cat.color,
+          }}
+        >
+          
+          {results.auftraege[cat.key].normal}
+        </td>
+        <td
+          style={{
+            textAlign: "center",
+            padding: "8px",
+            border: "1px solid #a2bb71",
+            color: cat.color
+          }}
+        >
+          {results.fahnen[cat.key]}
+        </td>
+        <td
+          style={{
+            textAlign: "center",
+            padding: "8px",
+            border: "1px solid #a2bb71",
+            color: cat.color,
+          }}
+        >
+          {results.auftraege[cat.key].double}
+        </td>
+        
+      </tr>
+      
+    ))}
+  </tbody>
+  <tr style={{ backgroundColor: "#f8f8f8", fontWeight: "bold" }}>
+  <td style={{
+    textAlign: "center",
+    padding: "8px",
+    border: "1px solid #a2bb71"
+  }}>
+    Σ
   </td>
-  <td style={{ textAlign: "right", color: cat.color }}>
-    {results.fahnen[cat.key]}
+  <td style={{
+    textAlign: "center",
+    padding: "8px",
+    border: "1px solid #a2bb71"
+  }}>
+    {results.auftraegeSum}
   </td>
-  <td style={{ textAlign: "right", color: cat.color }}>
-    {results.auftraege[cat.key].double}
+  <td style={{
+    textAlign: "center",
+    padding: "8px",
+    border: "1px solid #a2bb71"
+  }}>
+    {results.fahnenSum}
   </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+  <td style={{
+    textAlign: "center",
+    padding: "8px",
+    border: "1px solid #a2bb71"
+  }}>
+    {results.extrasSum}
+  </td>
+</tr>
+</table>
 
     <div style={{ display: "flex", flexWrap: "wrap", gap: 30, marginBottom: 10 }}>
-      <div>Aufträge: <b>{results.auftraegeSum}</b></div>
-      <div>Fahnen & Längste: <b>{results.fahnenSum}</b></div>
-      <div>Extra (doppelt) & Freigespielt: <b>{results.extraAndFreiSum}</b></div>
-    </div>
-
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 30, marginBottom: 10 }}>
-      <div style={{ color: "#888" }}>davon extra (doppelt): <b>{results.extrasSum}</b></div>
-      <div style={{ color: "#888" }}>davon Freigespielt: <b>{results.freiSum}</b></div>
+      <div><br/><h2>Freigespielt: <b>{results.freiSum}</b></h2></div>
     </div>
 
     <div style={{ fontSize: 20, fontWeight: 700, marginTop: 4 }}>
-      Gesamt: <span style={{ color: "#227" }}>{results.total}</span>
+      <br/><h1>Gesamt: <span style={{ color: "#000" }}>{results.total}</span></h1>
     </div>
   </div>
 
