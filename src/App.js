@@ -399,7 +399,7 @@ function App() {
   if (page === 1)
   return (
     <div style={{ padding: 24, maxWidth: 580, margin: "auto" }}>
-      <h1 style={{ textAlign: "center", marginBottom: 24 }}>Dorfromantik – Aufgaben Zähler</h1>
+      <h1 style={{ textAlign: "center", marginBottom: 24 }}>Dorfromantik: Scoreboard</h1>
 
       {/* Card container */}
       <div
@@ -447,11 +447,11 @@ function App() {
   // Page 2: Extras
   if (page === 2) return (
     <div style={{padding:24, maxWidth:740, margin:"auto"}}>
-      <h1>Dorfromantik – Aufgaben Zähler</h1>
-      <h2>Fahnen, Längste & weitere Extras</h2>
+      <h1>Dorfromantik: Scoreboard</h1>
+      <h2>Fahnen & Längste</h2>
       <form onSubmit={e => {e.preventDefault(); handleSubmitExtras();}} autoComplete="off">
       {/* Card for Fahnen & Längste */}
-<div
+      <div
   style={{
     backgroundColor: "#ecf0d5",
     padding: 20,
@@ -460,34 +460,40 @@ function App() {
     marginBottom: 32
   }}
 >
-  <h2 style={{ marginTop: 0, marginBottom: 16 }}>Fahnen & Längste</h2>
-  <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
-    {categories.map(cat => (
-      <div key={cat.key} style={{ minWidth: 160 }}>
-        
-        {extraFields
-  .filter(f => f.cat === cat.key)
-  .map(f => {
-    const iconMap = {
-      wald_fahnen: Wald_Fahne,
-      feld_fahnen: Feld_Fahne,
-      dorf_fahnen: Dorf_Fahne,
-      schiene_laengste: Schiene_max,
-      fluss_laengste: Fluss_max
-    };
-    return (
-      <div key={f.key} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      gap: 32
+    }}
+  >
+    {[
+      { key: "wald_fahnen", img: Wald_Fahne },
+      { key: "feld_fahnen", img: Feld_Fahne },
+      { key: "dorf_fahnen", img: Dorf_Fahne },
+      { key: "schiene_laengste", img: Schiene_max },
+      { key: "fluss_laengste", img: Fluss_max }
+    ].map(({ key, img }) => (
+      <div
+        key={key}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 6
+        }}
+      >
         <img
-          src={iconMap[f.key]}
-          alt={f.label}
-          style={{ width: 42, height: 42, borderRadius: 8 }}
+          src={img}
+          alt={key}
+          style={{ width: 48, height: 48 }}
         />
         <input
           type="number"
           min={0}
           step={1}
-          value={extras[f.key]}
-          onChange={e => handleExtraChange(e, f.key)}
+          value={extras[key]}
+          onChange={e => handleExtraChange(e, key)}
           style={{
             width: 50,
             padding: "4px 6px",
@@ -496,20 +502,18 @@ function App() {
           }}
         />
       </div>
-    );
-  })}
-      </div>
     ))}
   </div>
 </div>
 
 {/* Card for Freigespielt & Extras */}
-<h2 style={{ marginBottom: 16 }}>Freigespielt & weitere Extras</h2>
+<h2 style={{ marginBottom: 16, marginTop: 16 }}>Freigespielt</h2>
 <div
   style={{
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 24,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    columnGap: 32,
+    rowGap: 16,
     padding: 20,
     backgroundColor: "#ecf0d5",
     borderRadius: 12,
@@ -517,79 +521,97 @@ function App() {
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
   }}
 >
-  {freigespieltFields.map(f => (
-    <div key={f.key} style={{ minWidth: 180 }}>
-      <label style={{ fontSize: 14, fontWeight: 500 }}>
+  {freigespieltFields.map((f) => (
+    <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <label style={{ fontSize: 14, fontWeight: 500, flex: 1 }}>
         {f.label}
-        {f.type === "checkbox" ? (
+        {/* Custom instructions based on game sheet */}
+        {(() => {
+          const hintMap = {
+            rote_herzen: "(1/passender Kante)",
+            zirkus: "(umschlossen = 10)",
+            bahnwaerter: "(2/Bahnübergang)",
+            schaeferin: "(1/Schaf)",
+            huegel: "(im Abstand 2 = 2/Auftrag)",
+            baustelle: "(pro Gebiet 7+ = 7)",
+            ballon: "(2/Entfernung)",
+            goldenes_herz: "(2/passender Kante)",
+            bahnhof: "(beendet = 1/Plättchen)",
+            hafen: "(beendet = 1/Plättchen)"
+          };
+          return hintMap[f.key] ? (
+            <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>
+              {hintMap[f.key]}
+            </span>
+          ) : null;
+        })()}
+      </label>
+
+      {/* Aligned inputs */}
+      {f.type === "checkbox" ? (
+        <div
+          style={{
+            width: 50,
+            height: 30,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
           <input
             type="checkbox"
             checked={!!frei[f.key]}
-            onChange={e => handleFreiChange(e, f.key, f)}
-            style={{ marginLeft: 8 }}
+            onChange={(e) => handleFreiChange(e, f.key, f)}
           />
-        ) : f.type === "even" ? (
-          <input
-            type="number"
-            min={0}
-            step={2}
-            value={frei[f.key]}
-            onChange={e => handleFreiChange(e, f.key, f)}
-            style={{
-              width: 50,
-              marginLeft: 8,
-              padding: "4px 6px",
-              border: "1px solid #ccc",
-              borderRadius: 6
-            }}
-          />
-        ) : f.type === "baustelle" ? (
-          <select
-            value={frei[f.key]}
-            onChange={e => handleFreiChange(e, f.key, f)}
-            style={{
-              marginLeft: 8,
-              padding: "4px 6px",
-              border: "1px solid #ccc",
-              borderRadius: 6
-            }}
-          >
-            {baustelleOptions.map(opt => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            type="number"
-            min={0}
-            max={f.max}
-            step={1}
-            value={frei[f.key]}
-            onChange={e => handleFreiChange(e, f.key, f)}
-            style={{
-              width: 50,
-              marginLeft: 8,
-              padding: "4px 6px",
-              border: "1px solid #ccc",
-              borderRadius: 6
-            }}
-          />
-        )}
-        {f.max && f.type === "number" && (
-          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>max {f.max}</span>
-        )}
-        {f.type === "checkbox" && f.points && (
-          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>({f.points} Punkte)</span>
-        )}
-        {f.type === "even" && (
-          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>nur gerade</span>
-        )}
-        {f.type === "baustelle" && (
-          <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>(0, 7, 14, 21)</span>
-        )}
-      </label>
+        </div>
+      ) : f.type === "even" ? (
+        <input
+          type="number"
+          min={0}
+          step={2}
+          value={frei[f.key]}
+          onChange={(e) => handleFreiChange(e, f.key, f)}
+          style={{
+            width: 50,
+            padding: "4px 6px",
+            border: "1px solid #ccc",
+            borderRadius: 6
+          }}
+        />
+      ) : f.type === "baustelle" ? (
+        <select
+          value={frei[f.key]}
+          onChange={(e) => handleFreiChange(e, f.key, f)}
+          style={{
+            width: 50,
+            padding: "4px 6px",
+            border: "1px solid #ccc",
+            borderRadius: 6,
+            textAlign: "center"
+          }}
+        >
+          {baustelleOptions.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type="number"
+          min={0}
+          max={f.max}
+          step={1}
+          value={frei[f.key]}
+          onChange={(e) => handleFreiChange(e, f.key, f)}
+          style={{
+            width: 50,
+            padding: "4px 6px",
+            border: "1px solid #ccc",
+            borderRadius: 6
+          }}
+        />
+      )}
     </div>
   ))}
 </div>
@@ -602,43 +624,84 @@ function App() {
 
   // Page 3: Results
   if (page === 3 && results) return (
-    <div style={{padding:24, maxWidth:740, margin:"auto"}}>
-      <h1>Dorfromantik – Aufgaben Zähler</h1>
-      <h2>Ergebnisse</h2>
-      <table style={{width:"100%", borderCollapse:"collapse", marginBottom:16}}>
-        <thead>
-          <tr>
-            <th style={{textAlign:"left", borderBottom:"1px solid #bbb"}}>Kategorie</th>
-            <th style={{textAlign:"right", borderBottom:"1px solid #bbb"}}>Aufträge</th>
-            <th style={{textAlign:"right", borderBottom:"1px solid #bbb"}}>Fahnen/Längste</th>
-            <th style={{textAlign:"right", borderBottom:"1px solid #bbb"}}>Extra (doppelt)</th>
+    <div style={{ padding: 24, maxWidth: 740, margin: "auto" }}>
+  <h1>Dorfromantik: Scoreboard</h1>
+
+  <div
+    style={{
+      backgroundColor: "#ecf0d5",
+      padding: 24,
+      borderRadius: 12,
+      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+      marginTop: 24,
+      marginBottom: 32,
+      maxWidth: 700,
+      marginLeft: "auto",
+      marginRight: "auto"
+    }}
+  >
+    <h2 style={{ marginTop: 0 }}>Ergebnisse</h2>
+    <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 16 }}>
+      <thead>
+        <tr>
+          <th style={{ textAlign: "left", borderBottom: "1px solid #bbb" }}>Kategorie</th>
+          <th style={{ textAlign: "right", borderBottom: "1px solid #bbb" }}>Aufträge</th>
+          <th style={{ textAlign: "right", borderBottom: "1px solid #bbb" }}>Fahnen/Längste</th>
+          <th style={{ textAlign: "right", borderBottom: "1px solid #bbb" }}>Extra (doppelt)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {categories.map((cat) => (
+          <tr key={cat.key}>
+            <td style={{ textAlign: "left" }}>
+  <img
+    src={
+      {
+        wald: Wald,
+        feld: Feld,
+        dorf: Dorf,
+        schiene: Schiene,
+        fluss: Fluss
+      }[cat.key]
+    }
+    alt={cat.label}
+    style={{ width: 32, height: 32 }}
+  />
+</td>
+<td style={{ textAlign: "right", color: cat.color }}>
+    {results.auftraege[cat.key].normal}
+  </td>
+  <td style={{ textAlign: "right", color: cat.color }}>
+    {results.fahnen[cat.key]}
+  </td>
+  <td style={{ textAlign: "right", color: cat.color }}>
+    {results.auftraege[cat.key].double}
+  </td>
           </tr>
-        </thead>
-        <tbody>
-          {categories.map(cat =>
-            <tr key={cat.key}>
-              <td style={{color:cat.color, fontWeight:500}}>{cat.label}</td>
-              <td style={{textAlign:"right"}}>{results.auftraege[cat.key].normal}</td>
-              <td style={{textAlign:"right"}}>{results.fahnen[cat.key]}</td>
-              <td style={{textAlign:"right"}}>{results.auftraege[cat.key].double}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <div style={{display:"flex", flexWrap:"wrap", gap:30, marginBottom:10}}>
-        <div>Aufträge: <b>{results.auftraegeSum}</b></div>
-        <div>Fahnen & Längste: <b>{results.fahnenSum}</b></div>
-        <div>Extra (doppelt) & Freigespielt: <b>{results.extraAndFreiSum}</b></div>
-      </div>
-      <div style={{display:"flex", flexWrap:"wrap", gap:30, marginBottom:10}}>
-        <div style={{color:"#888"}}>davon extra (doppelt): <b>{results.extrasSum}</b></div>
-        <div style={{color:"#888"}}>davon Freigespielt: <b>{results.freiSum}</b></div>
-      </div>
-      <div style={{fontSize:20, fontWeight:700, marginTop:4}}>
-        Gesamt: <span style={{color:"#227"}}>{results.total}</span>
-      </div>
-      <button onClick={handleReset}>Neues Spiel</button>
+        ))}
+      </tbody>
+    </table>
+
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 30, marginBottom: 10 }}>
+      <div>Aufträge: <b>{results.auftraegeSum}</b></div>
+      <div>Fahnen & Längste: <b>{results.fahnenSum}</b></div>
+      <div>Extra (doppelt) & Freigespielt: <b>{results.extraAndFreiSum}</b></div>
     </div>
+
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 30, marginBottom: 10 }}>
+      <div style={{ color: "#888" }}>davon extra (doppelt): <b>{results.extrasSum}</b></div>
+      <div style={{ color: "#888" }}>davon Freigespielt: <b>{results.freiSum}</b></div>
+    </div>
+
+    <div style={{ fontSize: 20, fontWeight: 700, marginTop: 4 }}>
+      Gesamt: <span style={{ color: "#227" }}>{results.total}</span>
+    </div>
+  </div>
+
+  <div style={{ textAlign: "center" }}>
+    <button onClick={handleReset}>Neues Spiel</button>
+  </div>
+</div>
   );
 }
 
