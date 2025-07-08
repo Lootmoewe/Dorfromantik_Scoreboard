@@ -37,6 +37,19 @@ import Fluss_4 from './assets/Fluss_active_4.png';
 import Fluss_5 from './assets/Fluss_active_5.png';
 import Fluss_6 from './assets/Fluss_active_6.png';
 
+//Rundum
+import Rundum from './assets/Rundum.png';
+import Rundum_3 from './assets/Rundum_active_3.png';
+import Rundum_4 from './assets/Rundum_active_4.png';
+import Rundum_5 from './assets/Rundum_active_5.png';
+import Rundum_6 from './assets/Rundum_active_6.png';
+
+//Doppelauf
+import Doppelauf from './assets/Doppel.png';
+import Doppelauf_Wald_Feld_active_6 from './assets/Doppel_Wald_Feld_active_6.png';
+import Doppelauf_Dorf_Wald_active_6 from './assets/Doppel_Dorf_Wald_active_6.png';
+import Doppelauf_Feld_Dorf_active_6 from './assets/Doppel_Feld_Dorf_active_6.png';
+
 // Wald done
 import Wald_done_4 from './assets/Wald_done_4.png';
 import Wald_done_5 from './assets/Wald_done_5.png';
@@ -64,6 +77,17 @@ import Schiene_done_6 from './assets/Schiene_done_6.png';
 import Fluss_done_4 from './assets/Fluss_done_4.png';
 import Fluss_done_5 from './assets/Fluss_done_5.png';
 import Fluss_done_6 from './assets/Fluss_done_6.png';
+
+// Rundum done
+import Rundum_done_3 from './assets/Rundum_done_3.png';
+import Rundum_done_4 from './assets/Rundum_done_4.png';
+import Rundum_done_5 from './assets/Rundum_done_5.png';
+import Rundum_done_6 from './assets/Rundum_done_6.png';
+
+// Doppelauf done
+import Doppelauf_Wald_Feld_done_6 from './assets/Doppel_Wald_Feld_done_6.png';
+import Doppelauf_Dorf_Wald_done_6 from './assets/Doppel_Dorf_Wald_done_6.png';
+import Doppelauf_Feld_Dorf_done_6 from './assets/Doppel_Feld_Dorf_done_6.png';
 
 //Fahnen & Längste
 import Wald_Fahne from './assets/Wald_Fahne.png';
@@ -128,6 +152,28 @@ const imageMap = {
       5: Fluss_done_5,
       6: Fluss_done_6,
     }
+  },
+  Rundum: {
+    3: Rundum_3,
+    4: Rundum_4,
+    5: Rundum_5,
+    6: Rundum_6,
+    done: {
+      3: Rundum_done_3,
+      4: Rundum_done_4,
+      5: Rundum_done_5,
+      6: Rundum_done_6,
+    }
+  },
+  Doppelauf: {
+    0: Doppelauf_Wald_Feld_active_6,
+    1: Doppelauf_Dorf_Wald_active_6,
+    2: Doppelauf_Feld_Dorf_active_6,
+    done: {
+      0: Doppelauf_Wald_Feld_done_6,
+      1: Doppelauf_Dorf_Wald_done_6,
+      2: Doppelauf_Feld_Dorf_done_6,
+    }
   }
 };
 
@@ -137,7 +183,9 @@ const categories = [
   { key: "feld", label: "Feld", color: "#fcc02f", light: "#ffe68d" },
   { key: "dorf", label: "Dorf", color: "#bf5f56", light: "#e4a39d" },
   { key: "schiene", label: "Schiene", color: "#7e5842", light: "#b79d8b" },
-  { key: "fluss", label: "Fluss", color: "#85cdd2", light: "#c1e5e7" }
+  { key: "fluss", label: "Fluss", color: "#85cdd2", light: "#c1e5e7" },
+  { key: "rundum", label: "Rundum", color: "#323232", light: "#888888" },
+  { key: "doppelauf", label: "Doppelauf", color: "#444444", light: "#bbbbbb" }
 ];
 
 // Tasks for each category
@@ -146,7 +194,9 @@ const tasksData = {
   feld:   [4,4,5,5,6,6,7],
   dorf:   [4,4,5,5,6,6,7],
   schiene:[4,4,5,5,6,6],
-  fluss:  [4,4,5,5,6,6]
+  fluss:  [4,4,5,5,6,6],
+  rundum: [3, 4, 5, 6],
+  doppelauf: [6, 6, 6]
 };
 
 // Images for Task Buttons
@@ -184,16 +234,23 @@ const freigespieltFields = [
 // Baustelle allowed values
 const baustelleOptions = [0, 7, 14, 21];
 
-function TaskButton({ value, state, onClick, catLabel }) {
+function TaskButton({ value, state, onClick, catLabel, idx = 0 }) {
   const category = catLabel.charAt(0).toUpperCase() + catLabel.slice(1);
   let imgSrc = "";
 
-  if (state === 0 || state === 1) {
-    imgSrc = imageMap[category]?.[value];
-  } else if (state === 2 || state === 3) {
-    imgSrc = imageMap[category]?.done?.[value];
-  }
+  
 
+  if (category === "Doppelauf") {
+    imgSrc = (state === 0 || state === 1)
+      ? imageMap[category]?.[idx]
+      : imageMap[category]?.done?.[idx];
+  } else {
+    if (state === 0 || state === 1) {
+      imgSrc = imageMap[category]?.[value];
+    } else if (state === 2 || state === 3) {
+      imgSrc = imageMap[category]?.done?.[value];
+    }
+  }
   const style = {
     width: 56,
     height: 56,
@@ -262,7 +319,9 @@ function App() {
   const handleTaskClick = (cat, idx) => {
     setTaskStates(prev => {
       const currentState = prev[cat][idx];
-      const nextState = (currentState + 1) % 4;
+      const isRundum = cat === "rundum";
+      const maxState = isRundum ? 3 : 4;
+      const nextState = (currentState + 1) % maxState;
   
       // Count all tasks in state 1
       let active1Count = 0;
@@ -312,7 +371,7 @@ function App() {
       let normal = 0, double = 0;
       taskStates[cat.key].forEach((state, idx) => {
         if (state === 2) normal += getTaskValue(cat.key, idx);
-        if (state === 3) { 
+        if (state === 3 && cat.key !== "rundum") {
           normal += getTaskValue(cat.key, idx); 
           double += getTaskValue(cat.key, idx); 
         }
@@ -375,9 +434,10 @@ function App() {
   for (let row = 0; row < maxRows; ++row) {
     taskRows.push(
       <tr key={row}>
-        {categories.map(cat => (
-          <td
-            key={cat.key}
+        {categories
+  .filter(cat => !["rundum","doppelauf"].includes(cat.key))
+  .map(cat => (
+    <td key={cat.key}
             style={{
               textAlign: "center",
               width: cellWidth,
@@ -442,6 +502,42 @@ function App() {
             {taskRows}
           </tbody>
         </table>
+        <br/><br/>  
+        <div style={{
+  display: "flex",
+  justifyContent: "center",
+  gap: 12,
+  flexWrap: "wrap",
+  marginBottom: 24
+}}>
+  {tasksData.rundum.map((val, idx) => (
+    <TaskButton
+      key={`rundum-${idx}`}
+      value={val}
+      state={taskStates.rundum[idx]}
+      onClick={() => handleTaskClick("rundum", idx)}
+      catLabel="Rundum"
+    />
+  ))}
+</div>
+<div style={{
+  display: "flex",
+  justifyContent: "center",
+  gap: 12,
+  flexWrap: "wrap",
+  marginBottom: 24
+}}>
+  {tasksData.doppelauf.map((val, idx) => (
+    <TaskButton
+      key={`doppelauf-${idx}`}
+      value={val}
+      state={taskStates.doppelauf[idx]}
+      onClick={() => handleTaskClick("doppelauf", idx)}
+      catLabel="Doppelauf"
+      idx={idx}
+    />
+  ))}
+</div>
 
       </div>
 
@@ -496,6 +592,8 @@ function App() {
         <img src={img} alt={key} style={{ width: 48, height: 48 }} />
         <input
           type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
           min={0}
           step={1}
           value={extras[key]}
@@ -521,6 +619,8 @@ function App() {
         <img src={img} alt={key} style={{ width: 48, height: 48 }} />
         <input
           type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
           min={0}
           step={1}
           value={extras[key]}
@@ -598,6 +698,8 @@ function App() {
       ) : f.type === "even" ? (
         <input
           type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
           min={0}
           step={2}
           value={frei[f.key]}
@@ -630,6 +732,8 @@ function App() {
       ) : (
         <input
           type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
           min={0}
           max={f.max}
           step={1}
@@ -750,7 +854,9 @@ function App() {
               feld: Feld,
               dorf: Dorf,
               schiene: Schiene,
-              fluss: Fluss
+              fluss: Fluss,
+              rundum: Rundum,
+              doppelauf: Doppelauf
             }[cat.key]}
             alt={cat.label}
             style={{ width: 28, height: 28 }}
