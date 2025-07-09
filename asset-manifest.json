@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Dorfromantik_Scoreboard/static/css/main.357bdb80.css",
-    "main.js": "/Dorfromantik_Scoreboard/static/js/main.7f79916c.js",
+    "main.js": "/Dorfromantik_Scoreboard/static/js/main.5fc792a8.js",
     "static/js/453.e2750a64.chunk.js": "/Dorfromantik_Scoreboard/static/js/453.e2750a64.chunk.js",
     "static/media/Dorfromantik.png": "/Dorfromantik_Scoreboard/static/media/Dorfromantik.e02c57cc87439b7de686.png",
     "static/media/Wald_done_5.png": "/Dorfromantik_Scoreboard/static/media/Wald_done_5.1c30ab2ac38e55a10d82.png",
@@ -66,11 +66,11 @@
     "static/media/Wald_active_6.png": "/Dorfromantik_Scoreboard/static/media/Wald_active_6.225330439c840214d12c.png",
     "index.html": "/Dorfromantik_Scoreboard/index.html",
     "main.357bdb80.css.map": "/Dorfromantik_Scoreboard/static/css/main.357bdb80.css.map",
-    "main.7f79916c.js.map": "/Dorfromantik_Scoreboard/static/js/main.7f79916c.js.map",
+    "main.5fc792a8.js.map": "/Dorfromantik_Scoreboard/static/js/main.5fc792a8.js.map",
     "453.e2750a64.chunk.js.map": "/Dorfromantik_Scoreboard/static/js/453.e2750a64.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.357bdb80.css",
-    "static/js/main.7f79916c.js"
+    "static/js/main.5fc792a8.js"
   ]
 }
