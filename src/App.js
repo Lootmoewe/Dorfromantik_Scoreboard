@@ -228,11 +228,23 @@ const freigespieltFields = [
   { key: "ballon", label: "Ballon-Startplatz", type: "even" },
   { key: "goldenes_herz", label: "Goldenes Herz", max: 12, type: "number" },
   { key: "bahnhof", label: "Bahnhof", type: "number" },
-  { key: "hafen", label: "Hafen", type: "number" }
+  { key: "hafen", label: "Hafen", type: "number" },
 ];
 
+const freigespieltFieldsPlus = [
+  { key: "fotograf", label: "Fotograf", type: "number" },
+  { key: "schule", label: "Schule", type: "number" },
+  { key: "kornspeicher", label: "Kornspeicher", type: "number" },
+  { key: "alte_eiche", label: "Alte Eiche", type: "number" },
+  { key: "grosse_muehle", label: "Große Mühle", type: "number" },
+  { key: "adolfturm", label: "Adolfturm", type: "number" },
+  { key: "fernsehturm", label: "Fernsehturm", type: "number" },
+  { key: "pegasus", label: "Pegasus", type: "number" }
+];
 // Baustelle allowed values
 const baustelleOptions = [0, 7, 14, 21];
+
+
 
 function TaskButton({ value, state, onClick, catLabel, idx = 0 }) {
   const category = catLabel.charAt(0).toUpperCase() + catLabel.slice(1);
@@ -295,7 +307,16 @@ function evenInput(value, max) {
 
 function App() {
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [extensions, setExtensions] = useState({
+    duell: false,
+    grosseMuehle: false,
+    wetterau: false
+  });
+  
+  const handleExtensionChange = (key) => {
+  setExtensions(prev => ({ ...prev, [key]: !prev[key] }));
+};
 
   const [taskStates, setTaskStates] = useState(() => {
     const state = {};
@@ -364,6 +385,7 @@ function App() {
 
   const handleSubmitTasks = () => setPage(2);
   const handleBackExtras = () => setPage(1);
+  const handleBackResults = () => setPage(2)
 
   const handleSubmitExtras = () => {
     const auftraege = {};
@@ -385,11 +407,12 @@ function App() {
       if (fh) fahnen[cat.key] += Number(extras[fh.key] || 0);
     });
     let freiSum = 0;
-    freigespieltFields.forEach(f => {
-      if (f.type === "checkbox") freiSum += frei[f.key] ? f.points : 0;
-      else if (f.type === "baustelle") freiSum += Number(frei[f.key] || 0);
-      else freiSum += Number(frei[f.key] || 0);
-    });
+
+[...freigespieltFields, ...freigespieltFieldsPlus].forEach(f => {
+  if (f.type === "checkbox") freiSum += frei[f.key] ? f.points : 0;
+  else if (f.type === "baustelle") freiSum += Number(frei[f.key] || 0);
+  else freiSum += Number(frei[f.key] || 0);
+});
     const auftraegeSum = categories.reduce((s,cat) => s+auftraege[cat.key].normal,0);
     const extrasSum = categories.reduce((s,cat) => s+auftraege[cat.key].double,0);
     const fahnenSum = categories.reduce((s,cat) => s+fahnen[cat.key],0);
@@ -424,7 +447,7 @@ function App() {
       return st;
     });
     setResults(null);
-    setPage(1);
+    setPage(0);
   };
 
   // Build grid: rows = 4,4,5,5,6,6,7 (max 7), columns = categories
@@ -458,6 +481,78 @@ function App() {
     );
   }
 
+  
+  //Page 0:Extension Selection
+  if (page === 0) return (  
+  <div style={{ padding: 24, maxWidth: 580, margin: "auto" }}>
+    <div style={{ textAlign: "center", marginBottom: 24 }}>
+      <div
+        style={{
+          backgroundColor: "#505a35",
+          padding: 20,
+          borderRadius: 12,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          marginBottom: 36
+        }}
+      >
+        <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
+      </div>
+    </div>
+    <h2 style={{ marginTop: 0 }}>Erweiterungen aktivieren</h2>
+    <div style={{
+      backgroundColor: "#d5dcb6",
+      padding: 20,
+      borderRadius: 12,
+      boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+    }}>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+  {[
+    { label: "Das Duell", key: "duell" },
+    { label: "Große Mühle", key: "grosseMuehle" },
+    { label: "Wetterau", key: "wetterau" },
+  ].map(({ label, key }) => (
+    <div key={key} style={{ display: "flex", alignItems: "center" }}>
+      <div style={{
+        fontSize: 20,
+        fontWeight: 700,
+        flex: 1,
+        lineHeight: 1.4
+      }}>
+        {label}
+      </div>
+      <div style={{
+        width: 36,
+        height: 36,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <input
+          type="checkbox"
+          checked={extensions[key]}
+          onChange={() => handleExtensionChange(key)}
+          style={{
+            width: 20,
+            height: 20,
+            accentColor: "#505a35",
+            cursor: "pointer"
+          }}
+        />
+      </div>
+    </div>
+  ))}
+</div>
+    </div>
+
+    <div style={{ textAlign: "center", marginTop: 24 }}>
+      <button onClick={() => setPage(1)}>Spiel starten</button>
+    </div>
+  </div>
+);
+
+
+
   // Page 1: Task grid
   if (page === 1)
   return (
@@ -469,7 +564,7 @@ function App() {
           padding: 20,
           borderRadius: 12,
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          marginBottom: 24
+          marginBottom: 36
         }}
       >
   <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
@@ -484,7 +579,8 @@ function App() {
           padding: 20,
           borderRadius: 12,
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          marginBottom: 24
+          marginBottom: 24,
+
         }}
       >
         
@@ -508,8 +604,10 @@ function App() {
   justifyContent: "center",
   gap: 12,
   flexWrap: "wrap",
-  marginBottom: 24
+  marginBottom: 0
 }}>
+  {extensions.duell && (
+  <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
   {tasksData.rundum.map((val, idx) => (
     <TaskButton
       key={`rundum-${idx}`}
@@ -520,13 +618,17 @@ function App() {
     />
   ))}
 </div>
+)}
+</div>
 <div style={{
   display: "flex",
   justifyContent: "center",
   gap: 12,
   flexWrap: "wrap",
-  marginBottom: 24
+  marginBottom: 0
 }}>
+  {extensions.duell && (
+  <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
   {tasksData.doppelauf.map((val, idx) => (
     <TaskButton
       key={`doppelauf-${idx}`}
@@ -537,18 +639,23 @@ function App() {
       idx={idx}
     />
   ))}
+  </div>
+)}
 </div>
 
       </div>
 
       <div style={{ textAlign: "center" }}>
-        <button onClick={handleSubmitTasks} style={{ marginRight: 0 }}>
-          Weiter
-        </button><br/>
-        <button onClick={handleReset}>
-          Zurücksetzen
-        </button>
-      </div>
+  <button onClick={() => setPage(0)} style={{ marginRight: 16 }}>
+    Zurück
+  </button>
+  <button onClick={handleSubmitTasks} style={{ marginRight: 0 }}>
+    Weiter
+  </button><br/>
+  <button onClick={handleReset}>
+    Zurücksetzen
+  </button>
+</div>
     </div>
   );
 
@@ -563,7 +670,7 @@ function App() {
           padding: 20,
           borderRadius: 12,
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          marginBottom: 24
+          marginBottom: 36
         }}
       >
   <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
@@ -577,7 +684,7 @@ function App() {
     backgroundColor: "#d5dcb6",
     padding: 20,
     borderRadius: 12,
-    marginBottom: 24,
+    marginBottom: 36,
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
   }}
 >
@@ -637,7 +744,7 @@ function App() {
   </div>
 </div>
 
-{/* Card for Freigespielt & Extras */}
+{/* Card for Freigespielt*/}
 <h2 style={{ marginBottom: 16, marginTop: 16 }}>Freigespielt</h2>
 <div
   style={{
@@ -654,11 +761,10 @@ function App() {
 >
   {freigespieltFields.map((f) => (
     <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <label style={{ fontSize: 20, fontWeight: 500, flex: 1 }}>
-        {f.label}
-        {/* Custom instructions based on game sheet */}
-        {(() => {
-          const hintMap = {
+      <div style={{ flex: 1 }}>
+  <div style={{ fontSize: 20, fontWeight: 700 }}>{f.label}</div>
+  {(() => {
+    const hintMap = {
             rote_herzen: "(1/passender Kante)",
             zirkus: "(umschlossen = 10)",
             bahnwaerter: "(2/Bahnübergang)",
@@ -671,30 +777,37 @@ function App() {
             hafen: "(beendet = 1/Plättchen)"
           };
           return hintMap[f.key] ? (
-            <span style={{ fontSize: 12, marginLeft: 6, color: "#888" }}>
-              {hintMap[f.key]}
-            </span>
-          ) : null;
-        })()}
-      </label>
+      <div style={{ fontSize: 14, color: "#888", marginTop: 2 }}>
+        {hintMap[f.key]}
+      </div>
+    ) : null;
+  })()}
+</div>
 
       {/* Aligned inputs */}
       {f.type === "checkbox" ? (
-        <div
-          style={{
-            width: 50,
-            height: 30,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={!!frei[f.key]}
-            onChange={(e) => handleFreiChange(e, f.key, f)}
-          />
-        </div>
+  <div
+    style={{
+      width: 50,
+      height: 30,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}
+  >
+    <input
+      type="checkbox"
+      checked={!!frei[f.key]}
+      onChange={(e) => handleFreiChange(e, f.key, f)}
+      style={{
+        width: 20,
+        height: 20,
+        accentColor: "#505a35",
+        cursor: "pointer",
+        marginLeft: 2
+      }}
+    />
+  </div>
       ) : f.type === "even" ? (
         <input
           type="number"
@@ -750,6 +863,72 @@ function App() {
     </div>
   ))}
 </div>
+
+{(extensions.duell || extensions.grosseMuehle || extensions.wetterau) && (
+  <>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: window.innerWidth <= 600 ? "1fr" : "1fr 1fr",
+        columnGap: 32,
+        rowGap: 16,
+        padding: 20,
+        backgroundColor: "#d5dcb6",
+        borderRadius: 12,
+        marginBottom: 32,
+        boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+      }}
+    >
+      {freigespieltFieldsPlus
+        .filter(f =>
+          (extensions.duell && ["fotograf", "alte_eiche", "schule", "kornspeicher"].includes(f.key)) ||
+          (extensions.grosseMuehle && f.key === "grosse_muehle") ||
+          (extensions.wetterau && ["adolfturm", "fernsehturm", "pegasus"].includes(f.key))
+        )
+        .map((f) => (
+          <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 20, fontWeight: 700 }}>{f.label}</div>
+              {(() => {
+                const hintMap = {
+                  fotograf: "(1/Marker)",
+                  schule: "(im Abstand 2 = 1/Dorf)",
+                  kornspeicher: "(im Abstand 2 = 1/Feld)",
+                  alte_eiche: "(im Abstand 2 = 1/Wald)",
+                  grosse_muehle: "(Gebiet abgeschlossen = 2/Auftrag & Fahne)",
+                  adolfturm: "(1/passende Dorfkante)",
+                  fernsehturm: "(1/passende Feldkante)",
+                  pegasus: "(1/passende Waldkante)"
+                };
+                return hintMap[f.key] ? (
+                  <div style={{ fontSize: 14, color: "#888", marginTop: 2 }}>
+                    {hintMap[f.key]}
+                  </div>
+                ) : null;
+              })()}
+            </div>
+            <input
+              type="number"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              min={0}
+              max={f.max}
+              step={1}
+              value={frei[f.key]}
+              onChange={(e) => handleFreiChange(e, f.key, f)}
+              style={{
+                width: 50,
+                padding: "4px 6px",
+                border: "1px solid #ccc",
+                borderRadius: 6
+              }}
+            />
+          </div>
+        ))}
+    </div>
+  </>
+)}
+
 <div style={{ textAlign: "center" }}>
       <button type="button" onClick={handleBackExtras} style={{marginRight:16}}>Zurück</button>
       <button type="submit" >Weiter</button><br/>
@@ -769,7 +948,7 @@ function App() {
           padding: 20,
           borderRadius: 12,
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          marginBottom: 24
+          marginBottom: 36
         }}
       >
   <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
@@ -820,7 +999,7 @@ function App() {
         border: "1px solid #a2bb71",
         backgroundColor: "#f8f8f8",
         padding: "8px"
-      }}>Fahnen<br/>& max</th>
+      }}>Fahnen/<br/>Längste</th>
       <th style={{
         textAlign: "center",
         border: "1px solid #a2bb71",
@@ -830,7 +1009,14 @@ function App() {
     </tr>
   </thead>
   <tbody>
-    {categories.map((cat) => (
+    {categories
+  .filter(cat => {
+    if (cat.key === "rundum" || cat.key === "doppelauf") {
+      return extensions.duell;
+    }
+    return true;
+  })
+  .map(cat => (
       <tr key={cat.key}>
         <td
           style={{
@@ -844,7 +1030,7 @@ function App() {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      height: "100%"
+      height: "100%",
     }}
   >
   
@@ -869,6 +1055,7 @@ function App() {
             padding: "8px",
             border: "1px solid #a2bb71",
             color: cat.color,
+            fontWeight: "bold"
           }}
         >
           
@@ -879,7 +1066,8 @@ function App() {
             textAlign: "center",
             padding: "8px",
             border: "1px solid #a2bb71",
-            color: cat.color
+            color: cat.color,
+            fontWeight: "bold"
           }}
         >
           {results.fahnen[cat.key]}
@@ -890,6 +1078,7 @@ function App() {
             padding: "8px",
             border: "1px solid #a2bb71",
             color: cat.color,
+            fontWeight: "bold"
           }}
         >
           {results.auftraege[cat.key].double}
@@ -903,28 +1092,32 @@ function App() {
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71"
+    border: "1px solid #a2bb71",
+    borderTop: "3px solid #a2bb71"
   }}>
     Σ
   </td>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71"
+    border: "1px solid #a2bb71",
+    borderTop: "3px solid #a2bb71"
   }}>
     {results.auftraegeSum}
   </td>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71"
+    border: "1px solid #a2bb71",
+    borderTop: "3px solid #a2bb71"
   }}>
     {results.fahnenSum}
   </td>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71"
+    border: "1px solid #a2bb71",
+    borderTop: "3px solid #a2bb71"
   }}>
     {results.extrasSum}
   </td>
@@ -941,7 +1134,9 @@ function App() {
   </div>
 
   <div style={{ textAlign: "center" }}>
-    <button onClick={handleReset}>Neues Spiel</button>
+    <button onClick={handleBackResults} style={{marginRight:110}}>Zurück</button>
+    <br/>
+    <button onClick={handleReset} style={{width: 142}}>Neues Spiel</button>
   </div>
 </div>
   );
