@@ -1,6 +1,6 @@
 {
-  "short_name": "Dorfromantik",
-  "name": "Dorfrmantik Scoreboard",
+  "short_name": "DR Sakura",
+  "name": "Dorfrmantik Sakura Scoreboard",
   "icons": [
     
     {
@@ -14,7 +14,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/Dorfromantik_Scoreboard/",
+  "start_url": "/Dorfromantik_Sakura_Scoreboard/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
