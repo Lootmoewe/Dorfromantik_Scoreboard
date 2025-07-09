@@ -498,7 +498,7 @@ function App() {
         <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
       </div>
     </div>
-    <h2 style={{ marginTop: 0 }}>Erweiterungen aktivieren</h2>
+    <h2 style={{ marginTop: 0 }}>Erweiterungen</h2>
     <div style={{
       backgroundColor: "#d5dcb6",
       padding: 20,
