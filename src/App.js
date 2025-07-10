@@ -461,21 +461,27 @@ function App() {
   .filter(cat => !["rundum","doppelauf"].includes(cat.key))
   .map(cat => (
     <td key={cat.key}
-            style={{
-              textAlign: "center",
-              width: cellWidth,
-              padding: 0
-            }}
-          >
-            {tasksData[cat.key][row] !== undefined ? (
-              <TaskButton
-              value={tasksData[cat.key][row]}
-              state={taskStates[cat.key][row]}
-              onClick={() => handleTaskClick(cat.key, row)}
-              catLabel={cat.label}
-            />
-            ) : null}
-          </td>
+  style={{
+    textAlign: "center",
+    width: cellWidth,
+    padding: 0
+  }}
+>
+  {tasksData[cat.key][row] !== undefined ? (
+    <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}>
+      <TaskButton
+        value={tasksData[cat.key][row]}
+        state={taskStates[cat.key][row]}
+        onClick={() => handleTaskClick(cat.key, row)}
+        catLabel={cat.label}
+      />
+    </div>
+  ) : null}
+</td>
         ))}
       </tr>
     );
