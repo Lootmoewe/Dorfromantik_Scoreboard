@@ -307,6 +307,35 @@ function evenInput(value, max) {
 
 function App() {
 
+const Banner = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <div className="app-banner">
+      <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+        &#9776; {/* Unicode hamburger icon */}
+      </div>
+      <img src={Logo} alt="Dorfromantik Logo" />
+      {menuOpen && (
+        <div className="dropdown-menu">
+          <div className="menu-item active">Dorfromantik</div>
+          <a
+            className="menu-item"
+            href="https://lootmoewe.github.io/Dorfromantik_Sakura_Scoreboard/"
+          >
+            Dorfromantik Sakura
+          </a>
+          <a
+            className="menu-item"
+            href="https://lootmoewe.github.io/Dorfromantik_Duell_Scoreboard/"
+          >
+            Dorfromantik – Das Duell
+          </a>
+        </div>
+      )}
+    </div>
+  );
+};
   const [page, setPage] = useState(0);
   const [extensions, setExtensions] = useState({
     duell: false,
@@ -487,12 +516,15 @@ function App() {
     );
   }
 
+
+
   
   //Page 0:Extension Selection
-  if (page === 0) return (  
-  <div style={{ padding: 24, maxWidth: 580, margin: "auto" }}>
+  if (page === 0) return (
+  <><Banner />
+  <div style={{ paddingTop: 0, padding: 24, maxWidth: 580, margin: "auto" }}>
     <div style={{ textAlign: "center", marginBottom: 24 }}>
-      <div
+      {/*<div
         style={{
           backgroundColor: "#505a35",
           padding: 20,
@@ -503,6 +535,7 @@ function App() {
       >
         <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
       </div>
+      */}
     </div>
     <h2 style={{ marginTop: 0 }}>Erweiterungen</h2>
     <div style={{
@@ -513,41 +546,49 @@ function App() {
     }}>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-  {[
-    { label: "Das Duell", key: "duell" },
+  {[{ label: "Das Duell", key: "duell" },
     { label: "Große Mühle", key: "grosseMuehle" },
-    { label: "Wetterau", key: "wetterau" },
-  ].map(({ label, key }) => (
-    <div key={key} style={{ display: "flex", alignItems: "center" }}>
-      <div style={{
-        fontSize: 20,
-        fontWeight: 700,
-        flex: 1,
-        lineHeight: 1.4
-      }}>
-        {label}
-      </div>
-      <div style={{
-        width: 36,
-        height: 36,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
+    { label: "Wetterau", key: "wetterau" }
+  ].map(({ label, key }) => {
+    const isSelected = extensions[key];
+    return (
+      <div
+        key={key}
+        onClick={() => handleExtensionChange(key)}
+        style={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "16px 20px",
+          borderRadius: 12,
+          backgroundColor: isSelected ? "#505a35" : "#f0f0f0",
+          color: isSelected ? "#ffffff" : "#333333",
+          fontWeight: 700,
+          fontSize: 20,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          transition: "background-color 0.2s ease",
+        }}
+      >
+        <span>{label}</span>
         <input
           type="checkbox"
-          checked={extensions[key]}
-          onChange={() => handleExtensionChange(key)}
+          checked={isSelected}
+          readOnly
+          disabled
           style={{
             width: 20,
             height: 20,
             accentColor: "#505a35",
-            cursor: "pointer"
+            backgroundColor: "#505a35",
+            border: "2px solid #ffffff",
+            borderRadius: 4,
+            pointerEvents: "none"
           }}
         />
       </div>
-    </div>
-  ))}
+    );
+  })}
 </div>
     </div>
 
@@ -555,6 +596,7 @@ function App() {
       <button onClick={() => setPage(1)}>Spiel starten</button>
     </div>
   </div>
+  </>
 );
 
 
@@ -562,8 +604,10 @@ function App() {
   // Page 1: Task grid
   if (page === 1)
   return (
-    <div style={{ padding: 24, maxWidth: 580, margin: "auto" }}>
+    <><Banner />
+    <div style={{ paddigTop: 72, padding: 24, maxWidth: 580, margin: "auto" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
+      {/*}
       <div
         style={{
           backgroundColor: "#505a35",
@@ -575,6 +619,7 @@ function App() {
       >
   <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
   </div>
+  */}
 </div>
 
       {/* Card container */}
@@ -663,13 +708,15 @@ function App() {
   </button>
 </div>
     </div>
+    </>
   );
 
 
   // Page 2: Extras
   if (page === 2) return (
-    <div style={{padding:24, maxWidth:740, margin:"auto"}}>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
+    <><Banner />
+    <div style={{paddingTop: 24, padding:24, maxWidth:740, margin:"auto"}}>
+      {/*<div style={{ textAlign: "center", marginBottom: 24 }}>
       <div
         style={{
           backgroundColor: "#505a35",
@@ -682,7 +729,8 @@ function App() {
   <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
   </div>
   </div>
-      <h2>Fahnen & Längste</h2>
+  */}
+      <h2 style={{ marginTop: 0, marginBottom: 16, textalign:"center" }}>Fahnen & Längste</h2>
       <form onSubmit={e => {e.preventDefault(); handleSubmitExtras();}} autoComplete="off">
       {/* Card for Fahnen & Längste */}
       <div
@@ -753,11 +801,8 @@ function App() {
 {/* Card for Freigespielt*/}
 <h2 style={{ marginBottom: 16, marginTop: 16 }}>Freigespielt</h2>
 <div
+  className="freigespielt-grid"
   style={{
-    display: "grid",
-    gridTemplateColumns: window.innerWidth <= 600 ? "1fr" : "1fr 1fr",
-    columnGap: 32,
-    rowGap: 16,
     padding: 20,
     backgroundColor: "#d5dcb6",
     borderRadius: 12,
@@ -942,23 +987,28 @@ function App() {
 </div>      
       </form>
     </div>
+  </>
   );
 
   // Page 3: Results
   if (page === 3 && results) return (
+  <><Banner />
     <div style={{ padding: 24, maxWidth: 320, margin: "auto" }}>
   <div style={{ textAlign: "center", marginBottom: 24 }}>
+  {/*
   <div
-        style={{
-          backgroundColor: "#505a35",
-          padding: 20,
-          borderRadius: 12,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          marginBottom: 36
-        }}
-      >
+  className="freigespielt-grid"
+  style={{
+    padding: 20,
+    backgroundColor: "#d5dcb6",
+    borderRadius: 12,
+    marginBottom: 32,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+  }}
+>
   <img src={Logo} alt="Dorfromantik Logo" style={{ height: 80 }} />
   </div>
+  */}
   </div>
   <h2 style={{ marginTop: 0 }}>Ergebnisse</h2>
   <div
@@ -980,36 +1030,44 @@ function App() {
     width: "100%",
     borderCollapse: "collapse",
     marginBottom: 16,
-    backgroundColor: "#fff",
-    border: "1px solid #bbb",
+    backgroundColor: "#878f44",
+    border: "4px solid #ffffff",
   }}
 >
   <thead>
     <tr>
       <th style={{
         textAlign: "center",
-        border: "1px solid #a2bb71",
-        backgroundColor: "#f8f8f8",
+        border: "2px solid #ffffff",
+        borderBottom: "4px solid #ffffff",
+        borderRight: "3px solid #ffffff",
+        backgroundColor: "#4e5b22",
         padding: "8px"
       }}>
         {/* empty cell for icons */}
       </th>
       <th style={{
         textAlign: "center",
-        border: "1px solid #a2bb71",
-        backgroundColor: "#f8f8f8",
+        border: "2px solid #ffffff",
+        borderBottom: "4px solid #ffffff",
+        color: "#ffffff",
+        backgroundColor: "#4e5b22",
         padding: "8px"
       }}>Aufträge</th>
       <th style={{
         textAlign: "center",
-        border: "1px solid #a2bb71",
-        backgroundColor: "#f8f8f8",
+        border: "2px solid #ffffff",
+        borderBottom: "4px solid #ffffff",
+        color: "#ffffff",
+        backgroundColor: "#4e5b22",
         padding: "8px"
       }}>Fahnen/<br/>Längste</th>
       <th style={{
         textAlign: "center",
-        border: "1px solid #a2bb71",
-        backgroundColor: "#f8f8f8",
+        border: "2px solid #ffffff",
+        borderBottom: "4px solid #ffffff",
+        color: "#ffffff",
+        backgroundColor: "#4e5b22",
         padding: "8px"
       }}>doppelt</th>
     </tr>
@@ -1028,7 +1086,9 @@ function App() {
           style={{
             textAlign: "center",
             padding: "8px",
-            border: "1px solid #a2bb71"
+            border: "2px solid #ffffff",
+            borderRight: "3px solid #ffffff",
+            backgroundColor: "#4e5b22"
           }}
         >
           <div
@@ -1059,8 +1119,8 @@ function App() {
           style={{
             textAlign: "center",
             padding: "8px",
-            border: "1px solid #a2bb71",
-            color: cat.color,
+            border: "2px solid #ffffff",
+            color: "#ffffff",
             fontWeight: "bold"
           }}
         >
@@ -1071,8 +1131,8 @@ function App() {
           style={{
             textAlign: "center",
             padding: "8px",
-            border: "1px solid #a2bb71",
-            color: cat.color,
+            border: "2px solid #ffffff",
+            color: "#ffffff",
             fontWeight: "bold"
           }}
         >
@@ -1082,8 +1142,8 @@ function App() {
           style={{
             textAlign: "center",
             padding: "8px",
-            border: "1px solid #a2bb71",
-            color: cat.color,
+            border: "2px solid #ffffff",
+            color: "#ffffff",
             fontWeight: "bold"
           }}
         >
@@ -1094,36 +1154,42 @@ function App() {
       
     ))}
   </tbody>
-  <tr style={{ backgroundColor: "#f8f8f8", fontWeight: "bold" }}>
+  <tr style={{ backgroundColor: "#878f44", fontWeight: "bold" }}>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71",
-    borderTop: "3px solid #a2bb71"
+    border: "2px solid #ffffff",
+    borderRight: "3px solid #ffffff",
+    borderTop: "4px solid #ffffff",
+    color: "#ffffff",
+    backgroundColor: "#4e5b22"
   }}>
     Σ
   </td>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71",
-    borderTop: "3px solid #a2bb71"
+    border: "2px solid #ffffff",
+    borderTop: "4px solid #ffffff",
+    color: "#ffffff"
   }}>
     {results.auftraegeSum}
   </td>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71",
-    borderTop: "3px solid #a2bb71"
+    border: "2px solid #ffffff",
+    borderTop: "4px solid #ffffff",
+    color: "#ffffff"
   }}>
     {results.fahnenSum}
   </td>
   <td style={{
     textAlign: "center",
     padding: "8px",
-    border: "1px solid #a2bb71",
-    borderTop: "3px solid #a2bb71"
+    border: "2px solid #ffffff",
+    borderTop: "4px solid #ffffff",
+    color: "#ffffff"
   }}>
     {results.extrasSum}
   </td>
@@ -1145,6 +1211,7 @@ function App() {
     <button onClick={handleReset} style={{width: 142}}>Neues Spiel</button>
   </div>
 </div>
+</>
   );
 }
 
