@@ -215,15 +215,16 @@ th, td {
 .app-banner {
   position: sticky;
   top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
   z-index: 1000;
   background-color: #505a35;
-  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  position: relative;
 }
 
 .app-banner img {
@@ -233,6 +234,7 @@ th, td {
   transform: translateX(-50%);
   pointer-events: none;
 }
+
 
 /* {
   outline: 1px solid red;
